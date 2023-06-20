@@ -1,12 +1,14 @@
 import './App.css'
 
-function App() {
+import SearchMovies from "./components/SearchMovies"
 
-  return (
-    <div>
-        <h1>MOVIE SEARCH APP</h1>
-    </div>
-  )
+function App() {
+    return (
+        <div className="container">
+            <h1 className="title">React Movie Search</h1>
+            <SearchMovies />
+        </div>
+    )
 }
 
 export default App
