@@ -1,16 +1,16 @@
 import React, {useState} from "react"
+import MovieCard from "./MovieCard"
 
 function SearchMovies() {
 
-    // State for query from form input
+    // State for the movie you typed into the input field
     const [query, setQuery] = useState("")
 
-    //State for movie from API results
+    // State for movies from API results
     const [movies, setMovies] = useState([])
 
-    console.log(query)
-
-    const searchMovies = async (e) => {
+    // Search for the movie
+    async function getMovies(e) {
         e.preventDefault();
         
         // API url template literal with query value from the form input to search for
@@ -20,16 +20,26 @@ function SearchMovies() {
             const res = await fetch(url)
             const data = await res.json()
 
-            // Set movies array with results from API
+            // Set movies array with results from API call
             setMovies(data.results)
         } catch (err) {
             console.error(err)
         }
     }
 
+    // Create movie cards for each movie in results
+    const cards = movies.map((movie) => {
+        return (
+            <MovieCard 
+                key={movie.id}
+                {...movie}
+            />
+        )
+    })
+
     return (
         <div>
-            <form className="form" onSubmit={searchMovies}>
+            <form className="form" onSubmit={getMovies}>
                 <label className="label" htmlFor="query">Search Movies</label>
                 <input 
                     className="input" 
@@ -42,22 +52,7 @@ function SearchMovies() {
                 <button className="button" type="submit">Search</button>
             </form>
             <div className="card-list">
-                {movies.map(movie => (
-                    <div className="card" key={movie.id}>
-                        <img 
-                            className="card--image" 
-                            src={`https://image.tmdb.org/t/p/w185_and_h278_bestv2/${movie.poster_path}`} 
-                            alt={`${movie.title} poster`} 
-                        />
-                        <div className="card--content">
-                            <h3 className="card--title">{movie.title}</h3>
-                            <p><small><strong>Release Date:</strong> {movie.release_date}</small></p>
-                            <p><small><strong>Rating:</strong> {movie.vote_average}</small></p>
-                            <p className="card--description">{movie.overview}</p>
-                        </div>
-                        
-                    </div>
-                ))}
+                {cards}
             </div>    
         </div>
     )
